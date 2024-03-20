@@ -1,0 +1,15 @@
+INSERT INTO categories(name,isProhibited)
+VALUES ('Fashion accessories',false),
+       ('Food products',true),
+       ('All types of clothes',false),
+       ('Sports equipment',true),
+       ('All kinds of footwear',false),
+       ('Tobacco products',true),
+       ('Cosmetics',false),
+       ('Cleaning supplies',true),
+       ('Children toys',false),
+       ('Weapons and armory',true),
+       ('Tech accessories',false),
+       ('Vehicles and automotive parts',true),
+       ('Pet care products',false),
+       ('Natural fur products',true);
