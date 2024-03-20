@@ -34,11 +34,11 @@ public class CategoriesDao implements CommonDaoActions<Categories> {
     }
 
     public Optional<List<Categories>> getAllProhibited() {
-        return repository.findAllByProhibitedIsTrue();
+        return repository.findAllByisProhibitedIsTrue();
     }
 
     public Optional<List<Categories>> getAllAllowed() {
-        return repository.findAllByProhibitedIsFalse();
+        return repository.findAllByisProhibitedIsFalse();
     }
 
     @Override
