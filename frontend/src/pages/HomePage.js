@@ -1,5 +1,6 @@
 import {Box, Grid, Paper, styled, Typography} from "@mui/material";
 import CategoriesList from "../components/CategoriesList";
+import {ImageUploader} from "../components/ImageUploader";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,6 +26,7 @@ export const HomePage = () => {
                 <Typography variant={"h1"} sx={{ fontSize: 30, justifySelf:'center', pb:10}} color="text.secondary" gutterBottom>
                     Upload Product Image
                 </Typography>
+                <ImageUploader/>
                 <CategoriesList/>
                 <Box sx={{pb:10}}></Box>
             </Item>
