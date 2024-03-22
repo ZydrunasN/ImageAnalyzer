@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoriesRepository extends JpaRepository<Categories, Long> {
-    Optional<List<Categories>> findAllByisProhibitedIsTrue();
-    Optional<List<Categories>> findAllByisProhibitedIsFalse();
+    Optional<List<Categories>> findAllByProhibitedIsTrue();
+    Optional<List<Categories>> findAllByProhibitedIsFalse();
 }
