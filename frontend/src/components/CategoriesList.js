@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {CategoriesService} from "../services/CategoriesService";
 import {useEffect, useState} from "react";
+import {Box, Typography} from "@mui/material";
 
 function not(a, b) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -153,6 +154,9 @@ export default function CategoriesList() {
 
     return (
         <div>
+            <Typography variant={"h1"} sx={{ fontSize: 30, justifySelf:'center', pb:3}} color="text.secondary" gutterBottom>
+                Categories:
+            </Typography>
             <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item>{customList('Allowed', allowed)}</Grid>
                 <Grid item>
@@ -182,6 +186,7 @@ export default function CategoriesList() {
                 <Grid item>{customList('Prohibited', prohibited)}</Grid>
             </Grid>
             <Button variant="contained" sx={{mt:5}} onClick={updateCategories}>Update Categories</Button>
+            <Box sx={{pr:80}}></Box>
         </div>
     );
 }

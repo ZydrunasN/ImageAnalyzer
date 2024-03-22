@@ -16,7 +16,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export const ImageUploader = () => {
+export const ImageUploader = ({onImageUpload}) => {
     const [image, setImage] = useState(null);
 
     const handleFileInput = (e) => {
@@ -24,6 +24,7 @@ export const ImageUploader = () => {
             const formData = new FormData();
             formData.append("file",e.target.files[0]);
             setImage(URL.createObjectURL(e.target.files[0]));
+            onImageUpload(URL.createObjectURL(e.target.files[0]));
             UploadFilesService.upload(e.target.files[0]);
         }
     }

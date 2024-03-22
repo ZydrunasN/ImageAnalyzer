@@ -1,6 +1,8 @@
 import {Box, Grid, Paper, styled, Typography} from "@mui/material";
 import CategoriesList from "../components/CategoriesList";
 import {ImageUploader} from "../components/ImageUploader";
+import {LogTable} from "../components/LogTable";
+import {useState} from "react";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -11,6 +13,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const HomePage = () => {
+    const [image,setImage] = useState();
+
+    const handleImageUpload = (imageData) => {
+        setImage(imageData);
+    };
+
     return <Grid
         container
         spacing={0}
@@ -26,8 +34,11 @@ export const HomePage = () => {
                 <Typography variant={"h1"} sx={{ fontSize: 30, justifySelf:'center', pb:10}} color="text.secondary" gutterBottom>
                     Upload Product Image
                 </Typography>
-                <ImageUploader/>
-                <CategoriesList/>
+                <ImageUploader onImageUpload={handleImageUpload}/>
+                <Item sx={{display:'flex', alignContent:'flex-start', border:1, borderColor: 'primary.main'}}>
+                    <CategoriesList/>
+                    <LogTable imageData={image}/>
+                </Item>
                 <Box sx={{pb:10}}></Box>
             </Item>
         </Grid>
