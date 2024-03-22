@@ -54,4 +54,9 @@ public class CategoriesDao implements CommonDaoActions<Categories> {
     public void saveAll(List<Categories> categories) {
         repository.saveAll(categories);
     }
+
+    public void updateAll(List<Categories> categories) {
+        repository.deleteAll();
+        repository.saveAll(categories);
+    }
 }
