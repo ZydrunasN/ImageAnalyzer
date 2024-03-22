@@ -1,6 +1,20 @@
 import React, {useState} from 'react';
-import {Box, Input} from "@mui/material";
+import {Box, styled} from "@mui/material";
 import {UploadFilesService} from "../services/UploadFileService";
+import Button from "@mui/material/Button";
+
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 export const ImageUploader = () => {
     const [image, setImage] = useState(null);
@@ -18,7 +32,15 @@ export const ImageUploader = () => {
         <div>
             <div>{image && <img src={image} alt="image" width={300}/>}</div>
             <Box sx={{pb:5}}></Box>
-            <Input type="file" accept={"image/png"} onChange={handleFileInput}/>
+            <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+            >
+                Upload Image
+                <VisuallyHiddenInput type="file" accept={"image/png,image/jpeg"} onChange={handleFileInput}/>
+            </Button>
             <Box sx={{pb:5}}></Box>
         </div>
     );
