@@ -9,6 +9,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import {CategoriesService} from "../services/CategoriesService";
+import {useEffect, useState} from "react";
 
 function not(a, b) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -23,12 +25,22 @@ function union(a, b) {
 }
 
 export default function CategoriesList() {
-    const [checked, setChecked] = React.useState([]);
-    const [left, setLeft] = React.useState([0, 1, 2, 3]);
-    const [right, setRight] = React.useState([4, 5, 6, 7]);
+    const [checked, setChecked] = useState([]);
+    const [allowed, setAllowed] = useState([]);
+    const [prohibited, setProhibited] = useState([]);
 
-    const leftChecked = intersection(checked, left);
-    const rightChecked = intersection(checked, right);
+    useEffect(() => {
+        CategoriesService.getCategories().then(values => {
+            const allowedArr = values.filter(value => !value.prohibited)
+            const prohibitedArr = values.filter(value => value.prohibited)
+
+            setAllowed(allowedArr)
+            setProhibited(prohibitedArr)
+        });
+    }, []);
+
+    const allowedChecked = intersection(checked, allowed);
+    const prohibitedChecked = intersection(checked, prohibited);
 
     const handleToggle = (value) => () => {
         const currentIndex = checked.indexOf(value);
@@ -53,105 +65,123 @@ export default function CategoriesList() {
         }
     };
 
-    const handleCheckedRight = () => {
-        setRight(right.concat(leftChecked));
-        setLeft(not(left, leftChecked));
-        setChecked(not(checked, leftChecked));
+    const handleCheckedProhibited = () => {
+        setProhibited(prohibited.concat(allowedChecked));
+        setAllowed(not(allowed, allowedChecked));
+        setChecked(not(checked, allowedChecked));
     };
 
-    const handleCheckedLeft = () => {
-        setLeft(left.concat(rightChecked));
-        setRight(not(right, rightChecked));
-        setChecked(not(checked, rightChecked));
+    const handleCheckedAllowed = () => {
+        setAllowed(allowed.concat(prohibitedChecked));
+        setProhibited(not(prohibited, prohibitedChecked));
+        setChecked(not(checked, prohibitedChecked));
     };
 
-    const customList = (title, items) => (
-        <Card>
-            <CardHeader
-                sx={{ px: 2, py: 1 }}
-                avatar={
-                    <Checkbox
-                        onClick={handleToggleAll(items)}
-                        checked={numberOfChecked(items) === items.length && items.length !== 0}
-                        indeterminate={
-                            numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0
-                        }
-                        disabled={items.length === 0}
-                        inputProps={{
-                            'aria-label': 'all items selected',
-                        }}
-                    />
-                }
-                title={title}
-                subheader={`${numberOfChecked(items)}/${items.length} selected`}
-            />
-            <Divider />
-            <List
-                sx={{
-                    width: 200,
-                    height: 230,
-                    bgcolor: 'background.paper',
-                    overflow: 'auto',
-                }}
-                dense
-                component="div"
-                role="list"
-            >
-                {items.map((value) => {
-                    const labelId = `transfer-list-all-item-${value}-label`;
+    const updateCategories = () => {
+        const updatedAllowed = allowed.map(value => ({
+            ...value,
+            prohibited: false
+        }));
+        const updatedProhibited = prohibited.map(value => ({
+            ...value,
+            prohibited: true
+        }));
+        const newCategories = [...updatedAllowed,...updatedProhibited];
 
-                    return (
-                        <ListItemButton
-                            key={value}
-                            role="listitem"
-                            onClick={handleToggle(value)}
-                        >
-                            <ListItemIcon>
-                                <Checkbox
-                                    checked={checked.indexOf(value) !== -1}
-                                    tabIndex={-1}
-                                    disableRipple
-                                    inputProps={{
-                                        'aria-labelledby': labelId,
-                                    }}
-                                />
-                            </ListItemIcon>
-                            <ListItemText id={labelId} primary={`List item ${value + 1}`} />
-                        </ListItemButton>
-                    );
-                })}
-            </List>
-        </Card>
-    );
+        CategoriesService.updateCategories(newCategories);
+    }
+
+    const customList = (title, items) => {
+        const isProhibited = title === "Prohibited";
+        return (<Card>
+                <CardHeader
+                    sx={{px: 2, py: 1, backgroundColor: isProhibited ? '#ba000d' : '#124116'}}
+                    avatar={
+                        <Checkbox
+                            onClick={handleToggleAll(items)}
+                            checked={numberOfChecked(items) === items.length && items.length !== 0}
+                            indeterminate={
+                                numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0
+                            }
+                            disabled={items.length === 0}
+                            inputProps={{
+                                'aria-label': 'all items selected',
+                            }}
+                        />
+                    }
+                    title={title}
+                    subheader={`${numberOfChecked(items)}/${items.length} selected`}
+                />
+                <Divider/>
+                <List
+                    sx={{
+                        width: 200,
+                        height: 230,
+                        overflow: 'auto',
+                    }}
+                    dense
+                    component="div"
+                    role="list"
+                >
+                    {items.map((value) => {
+                        const labelId = `transfer-list-all-item-${value}-label`;
+
+                        return (
+                            <ListItemButton
+                                key={value.name}
+                                role="listitem"
+                                onClick={handleToggle(value)}
+                            >
+                                <ListItemIcon>
+                                    <Checkbox
+                                        checked={checked.indexOf(value) !== -1}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        inputProps={{
+                                            'aria-labelledby': labelId,
+                                        }}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText id={labelId} primary={value.name}/>
+                            </ListItemButton>
+                        );
+                    })}
+                </List>
+            </Card>
+        );
+    }
 
     return (
-        <Grid container spacing={2} justifyContent="center" alignItems="center">
-            <Grid item>{customList('Choices', left)}</Grid>
-            <Grid item>
-                <Grid container direction="column" alignItems="center">
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleCheckedRight}
-                        disabled={leftChecked.length === 0}
-                        aria-label="move selected right"
-                    >
-                        &gt;
-                    </Button>
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleCheckedLeft}
-                        disabled={rightChecked.length === 0}
-                        aria-label="move selected left"
-                    >
-                        &lt;
-                    </Button>
+        <div>
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item>{customList('Allowed', allowed)}</Grid>
+                <Grid item>
+                    <Grid container direction="column" alignItems="center">
+                        <Button
+                            sx={{my: 0.5}}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleCheckedProhibited}
+                            disabled={allowedChecked.length === 0}
+                            aria-label="move selected prohibited"
+                        >
+                            &gt;
+                        </Button>
+                        <Button
+                            sx={{my: 0.5}}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleCheckedAllowed}
+                            disabled={prohibitedChecked.length === 0}
+                            aria-label="move selected allowed"
+                        >
+                            &lt;
+                        </Button>
+                    </Grid>
                 </Grid>
+                <Grid item>{customList('Prohibited', prohibited)}</Grid>
             </Grid>
-            <Grid item>{customList('Chosen', right)}</Grid>
-        </Grid>
+            <Button variant="contained" sx={{mt:5}} onClick={updateCategories}>Update Categories</Button>
+        </div>
     );
 }
