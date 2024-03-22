@@ -50,4 +50,8 @@ public class CategoriesDao implements CommonDaoActions<Categories> {
     public void deleteByID(Long id) {
         repository.deleteById(id);
     }
+
+    public void saveAll(List<Categories> categories) {
+        repository.saveAll(categories);
+    }
 }

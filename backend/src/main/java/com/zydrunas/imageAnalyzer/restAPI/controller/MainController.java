@@ -33,15 +33,22 @@ public class MainController {
     }
 
     @PostMapping("/upload-image")
-    public void uploadImage(MultipartFile file) {
+    public ResponseEntity<?> uploadImage(MultipartFile file) {
         log.info("Received image from client in /upload-images");
         labelsService.DetectLabels(file);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/categories")
     public ResponseEntity<List<Categories>> getCategories() {
         log.info("Sent categories to client from /categories");
-        System.out.println(categoriesService.getAllCategories());
         return new ResponseEntity<>(categoriesService.getAllCategories().orElse(Collections.emptyList()), HttpStatus.OK);
+    }
+
+    @PutMapping("/update-categories")
+    public ResponseEntity<?> updateCategories(@RequestBody List<Categories> categories) {
+        log.info("Received categories to update /update-categories");
+        categoriesService.updateCategories(categories);
+        return ResponseEntity.ok().build();
     }
 }
