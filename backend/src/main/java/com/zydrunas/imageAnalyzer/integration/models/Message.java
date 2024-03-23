@@ -1,4 +1,4 @@
-package integration.models;
+package com.zydrunas.imageAnalyzer.integration.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

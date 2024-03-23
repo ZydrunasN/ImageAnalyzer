@@ -1,20 +1,21 @@
-package integration.service;
+package com.zydrunas.imageAnalyzer.integration.service;
 
-import integration.OpenAIConstants;
-import integration.models.Message;
-import integration.models.OpenAiRequestBody;
-import integration.models.OpenAiResponseBody;
+import com.zydrunas.imageAnalyzer.integration.OpenAIConstants;
+import com.zydrunas.imageAnalyzer.integration.models.Message;
+import com.zydrunas.imageAnalyzer.integration.models.OpenAiRequestBody;
+import com.zydrunas.imageAnalyzer.integration.models.OpenAiResponseBody;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class OpenAICallsService {
 
     public String callOpenAi(String label, String category) {
-        String prompt = "does "+label+" fall in a category "+category+"? write probability in percents without percentage symbol, nothing else";
+        String prompt = "does "+label+" fall in any of these categories: "+category+"? if yes write category name if no just write no, nothing else";
 
         WebClient client = WebClient.builder()
                 .baseUrl(OpenAIConstants.URL)
@@ -35,6 +36,7 @@ public class OpenAICallsService {
                 .bodyToMono(OpenAiResponseBody.class);
 
         System.out.println(response.block().getChoices().get(0).getMessage().getContent());
+
         return "";
     }
 }

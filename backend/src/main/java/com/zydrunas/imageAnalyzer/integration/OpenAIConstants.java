@@ -1,4 +1,4 @@
-package integration;
+package com.zydrunas.imageAnalyzer.integration;
 
 public class OpenAIConstants {
     public static final String API_KEY = "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";
