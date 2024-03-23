@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Typography} from "@mui/material";
 
 const columns = [
@@ -21,22 +21,32 @@ const columns = [
     },
 ];
 
-function createData(image, response, status) {
-    return {image, response, status};
-}
+export const LogTable = ({response}) => {
+    const initialRows = [];
 
-
-
-export const LogTable = ({imageData}) => {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rows, setRows] = useState(initialRows);
+    const [id, setId] = useState(0);
 
-    const rows = [
-        createData({imageData}, 'Image uploaded successfully', 'Approved'),
-        createData({}, 'Image uploaded successfully', 'Approved'),
-        createData({}, 'This image falls under prohibited category', 'Rejected'),
-        createData({}, 'This image falls under prohibited category', 'Rejected'),
-    ];
+
+    useEffect(() => {
+        if(response !== undefined && response.imageURL !== null) {
+            const status = response.approved ? 'Approved' : 'Rejected';
+            const resp = response.category === ''
+                ? 'Doesn\'t fall in any prohibited Category'
+                : 'Prohibited category: '+response.category;
+
+
+            const newRow = [
+                {image: response.imageURL,code: id, response: response.category, status: status}
+            ]
+            setId(id+1);
+            setRows([...rows, ...newRow])
+        }
+    }, [response]);
+
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -80,7 +90,7 @@ export const LogTable = ({imageData}) => {
                                                     <TableCell key={column.id} align={column.align}>
                                                         {
                                                             column.id === 'image' ?
-                                                                <img src={value.imageData} width={100}
+                                                                <img src={value} width={100}
                                                                      alt={'image'}></img> :
                                                                 <div>{value}</div>
                                                         }

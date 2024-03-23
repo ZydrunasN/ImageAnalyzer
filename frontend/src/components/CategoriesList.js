@@ -12,6 +12,7 @@ import Divider from '@mui/material/Divider';
 import {CategoriesService} from "../services/CategoriesService";
 import {useEffect, useState} from "react";
 import {Box, Typography} from "@mui/material";
+import {CustomSnackbar} from "./CustomSnackBar";
 
 function not(a, b) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -26,6 +27,7 @@ function union(a, b) {
 }
 
 export default function CategoriesList() {
+    const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState([]);
     const [allowed, setAllowed] = useState([]);
     const [prohibited, setProhibited] = useState([]);
@@ -78,7 +80,13 @@ export default function CategoriesList() {
         setChecked(not(checked, prohibitedChecked));
     };
 
+    function handleClose() {
+        setOpen(false);
+    }
+
     const updateCategories = () => {
+        setOpen(true);
+
         const updatedAllowed = allowed.map(value => ({
             ...value,
             prohibited: false
@@ -154,6 +162,8 @@ export default function CategoriesList() {
 
     return (
         <div>
+            <CustomSnackbar onClose={handleClose} state={open} title={"Categories updated successfully!"}/>
+
             <Typography variant={"h1"} sx={{ fontSize: 30, justifySelf:'center', pb:3}} color="text.secondary" gutterBottom>
                 Categories:
             </Typography>
