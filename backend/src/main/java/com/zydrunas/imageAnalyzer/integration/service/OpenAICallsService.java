@@ -4,6 +4,7 @@ import com.zydrunas.imageAnalyzer.integration.OpenAIConstants;
 import com.zydrunas.imageAnalyzer.integration.models.Message;
 import com.zydrunas.imageAnalyzer.integration.models.OpenAiRequestBody;
 import com.zydrunas.imageAnalyzer.integration.models.OpenAiResponseBody;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Service
+@Log4j2
 public class OpenAICallsService {
 
     public String callOpenAi(String label, String category) {
@@ -35,8 +37,6 @@ public class OpenAICallsService {
                 .retrieve()
                 .bodyToMono(OpenAiResponseBody.class);
 
-        System.out.println(response.block().getChoices().get(0).getMessage().getContent());
-
-        return "";
+        return response.block().getChoices().get(0).getMessage().getContent();
     }
 }

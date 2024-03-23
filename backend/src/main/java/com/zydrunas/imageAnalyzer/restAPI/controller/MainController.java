@@ -1,8 +1,10 @@
 package com.zydrunas.imageAnalyzer.restAPI.controller;
 
 import com.zydrunas.imageAnalyzer.dto.CategoriesDto;
+import com.zydrunas.imageAnalyzer.pojo.ValidatedImageResponse;
 import com.zydrunas.imageAnalyzer.restAPI.service.DetectLabelsService;
 import com.zydrunas.imageAnalyzer.service.CategoriesService;
+import com.zydrunas.imageAnalyzer.integration.service.OpenAICallsService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,18 +25,20 @@ public class MainController {
 
     DetectLabelsService labelsService;
     CategoriesService categoriesService;
+    OpenAICallsService openAICallsService;
 
     @Autowired
-    public MainController(DetectLabelsService labelsService, CategoriesService categoriesService) {
+    public MainController(DetectLabelsService labelsService, CategoriesService categoriesService, OpenAICallsService openAICallsService) {
         this.labelsService = labelsService;
         this.categoriesService = categoriesService;
+        this.openAICallsService = openAICallsService;
     }
 
     @PostMapping("/upload-image")
-    public ResponseEntity<String> uploadImage(MultipartFile file) {
+    public ResponseEntity<ValidatedImageResponse> uploadImage(MultipartFile file) {
         log.info("Received image from client in /upload-images");
-        labelsService.DetectLabels(file);
-        return ResponseEntity.status(HttpStatus.OK).body("Approved");
+        var validatedResponse = labelsService.DetectLabels(file);
+        return new ResponseEntity<>(validatedResponse,HttpStatus.OK);
     }
 
     @GetMapping("/categories")
