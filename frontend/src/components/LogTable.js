@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {useEffect, useState} from "react";
 import {Typography} from "@mui/material";
+import Button from "@mui/material/Button";
 
 const columns = [
     { id: 'image', label: 'image', minWidth: 170 },
@@ -50,6 +51,9 @@ export const LogTable = ({response}) => {
                 const sessionRows = JSON.parse(items);
                 if(sessionRows.length < savedRowsInStorage) {
                     sessionStorage.setItem('Logs', JSON.stringify([...sessionRows, ...newRow]));
+                } else {
+                    sessionRows.shift();
+                    sessionStorage.setItem('Logs', JSON.stringify([...sessionRows, ...newRow]));
                 }
             } else sessionStorage.setItem('Logs',JSON.stringify(newRow));
         }
@@ -64,6 +68,10 @@ export const LogTable = ({response}) => {
         }
     }, []);
 
+    function onClearLog() {
+        setRows([]);
+        sessionStorage.removeItem('Logs');
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -120,6 +128,7 @@ export const LogTable = ({response}) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
@@ -129,6 +138,7 @@ export const LogTable = ({response}) => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
+                <Button variant="contained" onClick={onClearLog} sx={{mb:1}}>CLEAR LOG</Button>
             </Paper>
         </div>
     );
