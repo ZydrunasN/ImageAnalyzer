@@ -17,7 +17,7 @@ import java.util.List;
 public class OpenAICallsService {
 
     public String callOpenAi(String label, String category) {
-        String prompt = "does "+label+" fall in any of these categories: "+category+"? if yes write category name if no just write no, nothing else";
+        String prompt = "does "+label+" fall in any of these categories: "+category+"? if yes write category name if no just write no, no other symbols in response";
 
         WebClient client = WebClient.builder()
                 .baseUrl(OpenAIConstants.URL)

@@ -8,6 +8,7 @@ import com.zydrunas.imageAnalyzer.entities.Categories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +39,23 @@ public class CategoriesService {
     }
 
     public void updateCategories(List<CategoriesDto> categoriesDto) {
-        var categories = categoriesDto.stream().map(mapper::toCategories).toList();
-        categoriesDao.updateAll(categories);
+        List<Categories> toSave = new ArrayList<>();
+        List<Categories> present = categoriesDao.getAll().get();
+
+        for (CategoriesDto categoryDto: categoriesDto) {
+            if(categoryDto.getId() == null){
+                if(isNewCategory(categoryDto,present)) {
+                    toSave.add(mapper.toCategories(categoryDto));
+                }
+            }
+        }
+        categoriesDao.updateAll(toSave);
+    }
+
+    private boolean isNewCategory(CategoriesDto categoryDto, List<Categories> categories) {
+        for (Categories category: categories) {
+            if(category.getName().equals(categoryDto.getName())) return false;
+        }
+        return true;
     }
 }

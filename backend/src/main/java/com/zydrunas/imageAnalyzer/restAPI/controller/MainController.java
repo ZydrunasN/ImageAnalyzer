@@ -1,6 +1,8 @@
 package com.zydrunas.imageAnalyzer.restAPI.controller;
 
+import com.zydrunas.imageAnalyzer.Mapper;
 import com.zydrunas.imageAnalyzer.dto.CategoriesDto;
+import com.zydrunas.imageAnalyzer.entities.Categories;
 import com.zydrunas.imageAnalyzer.pojo.ValidatedImageResponse;
 import com.zydrunas.imageAnalyzer.restAPI.service.DetectLabelsService;
 import com.zydrunas.imageAnalyzer.service.CategoriesService;

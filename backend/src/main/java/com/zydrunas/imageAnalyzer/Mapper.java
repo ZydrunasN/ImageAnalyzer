@@ -16,6 +16,7 @@ public class Mapper {
 
     public CategoriesDto toCategoriesDto(Categories categories) {
         return CategoriesDto.builder()
+                .id(categories.getId())
                 .prohibited(categories.getProhibited())
                 .name(categories.getName())
                 .build();
