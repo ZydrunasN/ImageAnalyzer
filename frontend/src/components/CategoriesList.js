@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {CategoriesService} from "../services/CategoriesService";
 import {useEffect, useState} from "react";
-import {Box, Typography} from "@mui/material";
+import {Box, TextField, ToggleButton, ToggleButtonGroup, Typography} from "@mui/material";
 import {CustomSnackbar} from "./CustomSnackBar";
 
 function not(a, b) {
@@ -27,10 +27,13 @@ function union(a, b) {
 }
 
 export default function CategoriesList() {
+    const [alignment, setAlignment] = useState('allowed');
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState([]);
     const [allowed, setAllowed] = useState([]);
     const [prohibited, setProhibited] = useState([]);
+    const [categoryName, setCategoryName] = useState('');
+    const [isError, setIsError] = useState(false);
 
     useEffect(() => {
         CategoriesService.getCategories().then(values => {
@@ -84,6 +87,10 @@ export default function CategoriesList() {
         setOpen(false);
     }
 
+    const handleChange = (event, newAlignment) => {
+        setAlignment(newAlignment);
+    };
+
     const updateCategories = () => {
         setOpen(true);
 
@@ -98,6 +105,26 @@ export default function CategoriesList() {
         const newCategories = [...updatedAllowed,...updatedProhibited];
 
         CategoriesService.updateCategories(newCategories);
+    }
+
+    function createCategory() {
+        if(/[a-zA-Z]/.test(categoryName)) {
+            setIsError(false);
+            if (alignment === "allowed") {
+                setAllowed([...allowed, {
+                    id: null,
+                    name: categoryName,
+                    prohibited: false
+                }])
+            } else {
+                setProhibited([...prohibited, {
+                    id: null,
+                    name: categoryName,
+                    prohibited: true
+                }])
+            }
+            setCategoryName('')
+        } else setIsError(true);
     }
 
     const customList = (title, items) => {
@@ -164,7 +191,7 @@ export default function CategoriesList() {
         <div>
             <CustomSnackbar onClose={handleClose} state={open} title={"Categories updated successfully!"}/>
 
-            <Typography variant={"h1"} sx={{ fontSize: 30, justifySelf:'center', pb:3}} color="text.secondary" gutterBottom>
+            <Typography variant={"h2"} sx={{ fontSize: 30, justifySelf:'center', pb:3}} color="text.secondary" gutterBottom>
                 Categories:
             </Typography>
             <Grid container spacing={2} justifyContent="center" alignItems="center">
@@ -195,6 +222,34 @@ export default function CategoriesList() {
                 </Grid>
                 <Grid item>{customList('Prohibited', prohibited)}</Grid>
             </Grid>
+
+            <div style={{display:'flex', paddingLeft:65}}>
+                <Box
+                    component="form"
+                    sx={{
+                        '& > :not(style)': { m: 1, width: '25ch', mr:2},
+                    }}
+                    noValidate
+                    autoComplete="off"
+                >
+                    <TextField error={isError} id="outlined-basic" value={categoryName} onChange={(event) => {
+                        setCategoryName(event.target.value);}} label="Category Name" variant="outlined" />
+                </Box>
+                <ToggleButtonGroup
+                    size="small"
+                    color="primary"
+                    value={alignment}
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
+                    sx={{display:'block', marginTop:2}}
+                >
+                    <ToggleButton value="allowed" >Allowed</ToggleButton>
+                    <ToggleButton value="prohibited">Prohibited</ToggleButton>
+                </ToggleButtonGroup>
+                <Button variant="contained" onClick={createCategory} sx={{maxHeight:40, marginTop:2, marginLeft:2}} >SUBMIT</Button>
+            </div>
+
             <Button variant="contained" sx={{mt:5}} onClick={updateCategories}>Update Categories</Button>
             <Box sx={{pr:80}}></Box>
         </div>
