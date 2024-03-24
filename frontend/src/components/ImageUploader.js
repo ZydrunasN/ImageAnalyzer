@@ -30,17 +30,26 @@ export const ImageUploader = ({onImageUpload}) => {
 
     const handleFileInput = (e) => {
         if(e.target.files[0] !== undefined) {
+            const reader = new FileReader();
+            let imageURL;
+
+            reader.onload = () => {
+                imageURL = reader.result;
+                setImage(reader.result)
+            }
+            reader.readAsDataURL(e.target.files[0])
+
             setOpen(true);
             const formData = new FormData();
             formData.append("file",e.target.files[0]);
             setImage(URL.createObjectURL(e.target.files[0]));
             UploadFilesService.upload(e.target.files[0]).then(value => {
                 setResponse({
-                    imageURL: URL.createObjectURL(e.target.files[0]),
+                    imageURL: imageURL,
                     approved: value.approved,
                     category: value.category
                 })
-            }).catch(error => console.log(error));
+            }).catch(error => console.error(error));
         }
     }
 
