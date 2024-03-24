@@ -5,9 +5,11 @@ This project used React and Spring Boot 3.2.1.<br>
 Material UI library, Cloud Vision and OpenAI gpt-3.5-turbo APIs included
 
 ## Project Description
-Pictures a uploaded through React application and then evaluated in Spring Boot application<br>
-using Cloud Vision labels and OpenAi language model if that image belongs to any of the prohibited categories.<br>
-Then response is sent to react application and shown via user interface.
+
+Pictures are uploaded via a React application, then analyzed within a Spring Boot application using<br>
+Cloud Vision labels and the OpenAI language model to ascertain whether the image falls into any<br>
+prohibited categories. Subsequently, the response is sent back to the React application<br>
+and presented through the user interface.
 
 ## Available Scripts For React Module
 
