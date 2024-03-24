@@ -39,7 +39,7 @@ export const LogTable = ({response}) => {
 
 
             const newRow = [
-                {image: response.imageURL,code: id, response: response.category, status: status}
+                {image: response.imageURL,code: id, response: resp, status: status}
             ]
             setId(id+1);
             setRows([...rows, ...newRow])
@@ -59,9 +59,9 @@ export const LogTable = ({response}) => {
 
     return (
         <div>
-            <Typography variant={"h1"} sx={{fontSize: 30, justifySelf: 'center', pb: 3}} color="text.secondary"
+            <Typography variant={"h2"} sx={{fontSize: 30, justifySelf: 'center', pb: 3}} color="text.secondary"
                         gutterBottom>
-                Log:
+                Logs:
             </Typography>
             <Paper sx={{width: '100%', mt: 0}}>
                 <TableContainer sx={{maxHeight: 440}}>
