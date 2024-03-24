@@ -138,7 +138,7 @@ export const LogTable = ({response}) => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-                <Button variant="contained" onClick={onClearLog} sx={{mb:1}}>CLEAR LOG</Button>
+                <Button variant="contained" onClick={onClearLog} sx={{mb:1}}>CLEAR LOGS</Button>
             </Paper>
         </div>
     );

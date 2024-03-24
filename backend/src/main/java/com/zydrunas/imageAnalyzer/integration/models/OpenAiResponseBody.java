@@ -15,7 +15,6 @@ public class OpenAiResponseBody {
     private List<Choice> choices;
     private Usage usage;
     private String system_fingerprint;
-    // Getters and setters
 
     @Getter
     @Setter
@@ -24,8 +23,6 @@ public class OpenAiResponseBody {
         private Message message;
         private Object logprobs;
         private String finish_reason;
-
-        // Getters and setters
     }
 
     @Getter
@@ -33,8 +30,6 @@ public class OpenAiResponseBody {
     public static class Message {
         private String role;
         private String content;
-
-        // Getters and setters
     }
 
     @Getter
@@ -43,7 +38,5 @@ public class OpenAiResponseBody {
         private int prompt_tokens;
         private int completion_tokens;
         private int total_tokens;
-
-        // Getters and setters
     }
 }
