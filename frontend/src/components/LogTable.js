@@ -22,11 +22,11 @@ const columns = [
 ];
 
 export const LogTable = ({response}) => {
-    const initialRows = [];
+    const savedRowsInStorage = 20;
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [rows, setRows] = useState(initialRows);
+    const [rows, setRows] = useState([]);
     const [id, setId] = useState(0);
 
 
@@ -43,9 +43,26 @@ export const LogTable = ({response}) => {
             ]
             setId(id+1);
             setRows([...rows, ...newRow])
+
+
+            const items = sessionStorage.getItem('Logs');
+            if(items !== null) {
+                const sessionRows = JSON.parse(items);
+                if(sessionRows.length < savedRowsInStorage) {
+                    sessionStorage.setItem('Logs', JSON.stringify([...sessionRows, ...newRow]));
+                }
+            } else sessionStorage.setItem('Logs',JSON.stringify(newRow));
         }
     }, [response]);
 
+    console.log(sessionStorage.length)
+
+    useEffect(() => {
+        if(sessionStorage.getItem('Logs') !== null) {
+            const sessionRows = JSON.parse(sessionStorage.getItem('Logs'));
+            setRows(sessionRows);
+        }
+    }, []);
 
 
     const handleChangePage = (event, newPage) => {

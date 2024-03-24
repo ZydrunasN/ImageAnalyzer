@@ -247,7 +247,7 @@ export default function CategoriesList() {
                     <ToggleButton value="allowed" >Allowed</ToggleButton>
                     <ToggleButton value="prohibited">Prohibited</ToggleButton>
                 </ToggleButtonGroup>
-                <Button variant="contained" onClick={createCategory} sx={{maxHeight:40, marginTop:2, marginLeft:2}} >SUBMIT</Button>
+                <Button variant="contained" onClick={createCategory} sx={{maxHeight:40, marginTop:2, marginLeft:2}} >ADD</Button>
             </div>
 
             <Button variant="contained" sx={{mt:5}} onClick={updateCategories}>Update Categories</Button>
